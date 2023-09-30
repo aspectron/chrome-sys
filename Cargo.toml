@@ -9,4 +9,7 @@ edition = "2021"
 js-sys = "0.3.64"
 wasm-bindgen = "0.2.87"
 wasm-bindgen-futures = "0.4"
+workflow-core = {path = "../workflow-rs/core"}
+workflow-core-macros = {path = "../workflow-rs/core/macros"}
+thiserror = "1.0.47"
 
