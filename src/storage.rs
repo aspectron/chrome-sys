@@ -13,7 +13,7 @@ extern "C" {
     pub async fn local_get_impl(key: String) -> std::result::Result<JsValue, JsValue>;
 
     #[wasm_bindgen(catch, js_namespace = ["chrome", "storage", "local"], js_name="get")]
-    pub async fn local_get_many_impl(keys: Array) -> std::result::Result<JsValue, JsValue>;
+    pub async fn local_get_items_impl(keys: Array) -> std::result::Result<JsValue, JsValue>;
 
     #[wasm_bindgen(catch, js_namespace = ["chrome", "storage", "local"], js_name="get")]
     pub async fn local_get_all_impl() -> std::result::Result<JsValue, JsValue>;
@@ -22,7 +22,7 @@ extern "C" {
     pub async fn local_remove_impl(key: String) -> std::result::Result<(), JsValue>;
 
     #[wasm_bindgen(catch, js_namespace = ["chrome", "storage", "local"], js_name="remove")]
-    pub async fn local_remove_many_impl(keys: Array) -> std::result::Result<(), JsValue>;
+    pub async fn local_remove_items_impl(keys: Array) -> std::result::Result<(), JsValue>;
 
     #[wasm_bindgen(catch, js_namespace = ["chrome", "storage", "local"], js_name="clear")]
     pub async fn local_clear_impl() -> std::result::Result<(), JsValue>;
@@ -56,14 +56,14 @@ impl LocalStorage {
         }
     }
 
-    pub async fn get_many(keys: Vec<&str>) -> Result<StorageData, JsValue> {
+    pub async fn get_items(keys: Vec<&str>) -> Result<StorageData, JsValue> {
         let keys = keys.iter().map(|k| k.to_string()).collect::<Vec<_>>();
         Ok(call_async_send!(async move {
             let query = Array::new();
             for key in keys {
                 query.push(&key.into());
             }
-            local_get_many_impl(query).await
+            local_get_items_impl(query).await
         })?
         .try_into()?)
     }
@@ -72,19 +72,23 @@ impl LocalStorage {
         Ok(call_async_send!(local_get_all_impl().await)?.try_into()?)
     }
 
+    pub async fn keys() -> Result<Vec<String>, JsValue> {
+        Ok(Self::get_all().await?.keys())
+    }
+
     pub async fn remove_item(key: &str) -> Result<(), JsValue> {
         let key = key.to_string();
         call_async_send!(local_remove_impl(key).await)
     }
 
-    pub async fn remove_many(keys: Vec<&str>) -> Result<(), JsValue> {
+    pub async fn remove_items(keys: Vec<&str>) -> Result<(), JsValue> {
         let keys = keys.iter().map(|k| k.to_string()).collect::<Vec<_>>();
         call_async_send!(async move {
             let query = Array::new();
             for key in keys {
                 query.push(&key.into());
             }
-            local_remove_many_impl(query).await
+            local_remove_items_impl(query).await
         })
     }
 
@@ -127,7 +131,7 @@ impl TryFrom<JsValue> for StorageData {
     fn try_from(inner: JsValue) -> Result<Self, Self::Error> {
         if !inner.is_object() {
             return Err(JsError::new(
-                "Invalid JsValue: cant convert JsValue to Obj.",
+                &format!("Invalid JsValue: cant convert JsValue ({inner:?}) to StorageData."),
             ));
         }
         let inner = Object::from(inner);
@@ -243,7 +247,7 @@ async fn test_impl() -> Result<(), JsValue> {
         );
     }
     {
-        let data = LocalStorage::get_many(vec!["key2", "key3"]).await?;
+        let data = LocalStorage::get_items(vec!["key2", "key3"]).await?;
         assert_test!("Key length should be 2", data.keys().len(), 2);
         assert_test!("'key2' key should be there", data.has("key2"), true);
         assert_test!("'key3' key should be there", data.has("key3"), true);
