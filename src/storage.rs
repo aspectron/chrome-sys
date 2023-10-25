@@ -130,9 +130,9 @@ impl TryFrom<JsValue> for StorageData {
     type Error = JsError;
     fn try_from(inner: JsValue) -> Result<Self, Self::Error> {
         if !inner.is_object() {
-            return Err(JsError::new(
-                &format!("Invalid JsValue: cant convert JsValue ({inner:?}) to StorageData."),
-            ));
+            return Err(JsError::new(&format!(
+                "Invalid JsValue: cant convert JsValue ({inner:?}) to StorageData."
+            )));
         }
         let inner = Object::from(inner);
         Ok(Self { inner })
