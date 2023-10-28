@@ -2,14 +2,19 @@
 name = "chrome-sys"
 version = "0.1.0"
 edition = "2021"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+license = "Apache-2.0 OR MIT"
+repository = "https://github.com/aspectron/chrome-sys"
+authors = ["Anton Yemelyanov <anton.yemelyanov@gmail.com>", "Surinder Singh Matoo Mattaur <surinder83singh@gmail.com>"]
+exclude = ["/.*", "/test"]
+keywords = ["chrome","bindings"]
+categories = ["wasm","api-bindings"]
+description = """
+Raw wasm_bindgen bindings for the Chrome Extension API.
+"""
 
 [dependencies]
 js-sys = "0.3.64"
 wasm-bindgen = "0.2.87"
 wasm-bindgen-futures = "0.4"
-workflow-core = {path = "../workflow-rs/core"}
-workflow-core-macros = {path = "../workflow-rs/core/macros"}
 thiserror = "1.0.47"
 
