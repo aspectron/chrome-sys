@@ -14,7 +14,7 @@ Raw wasm_bindgen bindings for the Chrome Extension API.
 
 [dependencies]
 js-sys = "0.3.64"
-wasm-bindgen = "0.2.87"
+wasm-bindgen = "0.2.92"
 wasm-bindgen-futures = "0.4"
 thiserror = "1.0.47"
 
