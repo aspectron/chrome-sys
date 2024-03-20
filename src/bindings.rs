@@ -17,7 +17,6 @@ extern "C" {
     #[wasm_bindgen(catch, js_namespace = ["chrome", "runtime"], js_name="sendMessage")]
     pub async fn send_message(s: &JsValue) -> Result<JsValue, JsValue>;
 
-
     #[wasm_bindgen(extends = Object)]
     #[derive(Debug)]
     pub type TabInfo;
