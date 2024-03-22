@@ -1,5 +1,7 @@
 pub use crate::bindings::*;
 pub use crate::helpers::*;
+pub use crate::runtime as chrome_runtime;
+pub use crate::runtime::connect as chrome_runtime_connect;
 pub use crate::runtime::on_connect as chrome_runtime_on_connect;
 pub use crate::runtime::on_message as chrome_runtime_on_message;
 pub use crate::runtime::port as chrome_runtime_port;

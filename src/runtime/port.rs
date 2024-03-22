@@ -12,6 +12,9 @@ extern "C" {
     #[wasm_bindgen(method, getter)]
     pub fn sender(this: &Port) -> Sender;
 
+    #[wasm_bindgen(method, getter)]
+    pub fn name(this: &Port) -> Option<String>;
+
     #[wasm_bindgen(method, getter, js_name = "onMessage")]
     pub fn on_message(this: &Port) -> PortOnMessage;
 
